@@ -1,146 +1,193 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Алмазная Мозаика: или как я чуть не поседела</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faceit Достижения — dosb1w</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-            color: #333;
-        }
-        header {
-            background: url('ваше-фото-фон.jpg') no-repeat center center/cover;
-            color: white;
-            padding: 100px 20px;
-            text-align: center;
-        }
-        header h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        header p {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        header .button {
-            background-color: #f1c40f;
-            color: black;
-            padding: 15px 30px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        header .button:hover {
-            background-color: #e1b400;
-        }
+      :root {
+        color-scheme: dark;
+        --bg: #0b0f14;
+        --card: #141b23;
+        --accent: #ff5500;
+        --text: #e8eef5;
+        --muted: #9aa7b7;
+      }
 
-        section {
-            padding: 50px 20px;
-            text-align: center;
-        }
-        section h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        section p {
-            font-size: 18px;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto 30px auto;
-        }
-        section img {
-            width: 80%;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
-        }
+      * {
+        box-sizing: border-box;
+      }
 
-        .advice {
-            background-color: #f39c12;
-            padding: 20px;
-            border-radius: 8px;
-            color: white;
-        }
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background: radial-gradient(circle at top, #1b2633 0%, #0b0f14 55%);
+        color: var(--text);
+      }
 
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
+      header {
+        padding: 80px 20px 60px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 40px;
+        margin-bottom: 12px;
+      }
+
+      header p {
+        max-width: 720px;
+        margin: 0 auto 28px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .button {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 14px 28px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .card {
+        background: var(--card);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .card h3 {
+        margin: 0 0 12px;
+        font-size: 18px;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .section-title {
+        margin: 48px 0 18px;
+        font-size: 26px;
+      }
+
+      .highlight {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .achievements {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .achievements li {
+        background: rgba(255, 85, 0, 0.08);
+        border: 1px solid rgba(255, 85, 0, 0.3);
+        padding: 14px 18px;
+        border-radius: 12px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 32px 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <header>
+      <h1>Faceit-резюме игрока <span class="highlight">dosb1w</span></h1>
+      <p>
+        Здесь собраны ключевые достижения и прогресс на Faceit. Данные можно
+        обновлять вручную, чтобы страница всегда показывала актуальные результаты
+        и цели.
+      </p>
+      <a class="button" href="https://www.faceit.com/ru/players/dosb1w" target="_blank" rel="noreferrer">
+        Открыть профиль Faceit
+      </a>
+    </header>
 
-<header>
-    <h1>Привет. Меня зовут Марина, и я решила добровольно страдать. Добро пожаловать в мой алмазный ад.</h1>
-    <p>Казалось бы, что может пойти не так? Спойлер: всё.</p>
-    <a href="#etap1" class="button">Начать этот безумный путь</a>
-</header>
+    <main>
+      <section>
+        <h2 class="section-title">Краткая статистика</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Текущий уровень</h3>
+            <p>Укажите текущий уровень Faceit (например, уровень 7).</p>
+          </div>
+          <div class="card">
+            <h3>ELO</h3>
+            <p>Добавьте актуальное значение ELO и динамику за сезон.</p>
+          </div>
+          <div class="card">
+            <h3>Матчи</h3>
+            <p>Сколько матчей сыграно и сколько побед за последний месяц.</p>
+          </div>
+          <div class="card">
+            <h3>Winrate</h3>
+            <p>Процент побед в любимом режиме или на любимых картах.</p>
+          </div>
+        </div>
+      </section>
 
-<section id="etap1">
-    <h2>Этап 1: “Когда я ещё верил(а) в счастливый конец”</h2>
-    <img src="ваше-фото-распаковка.jpg" alt="Распаковка">
-    <p>Я думал(а), что это просто. Я ошибалась. На этом моменте ещё были силы и вера.</p>
-</section>
+      <section>
+        <h2 class="section-title">Главные достижения</h2>
+        <ul class="achievements">
+          <li>🔥 Лучший win streak: добавьте максимальную серию побед.</li>
+          <li>🏆 Турнирные успехи: перечислите турниры или лиги.</li>
+          <li>🎯 Рекорд по ELO: укажите максимальное значение.</li>
+          <li>🤝 Командные достижения: подчеркните вклад в команду.</li>
+        </ul>
+      </section>
 
-<section id="etap2">
-    <h2>Этап 2: “Сортировка или мини-ад на земле”</h2>
-    <img src="ваше-фото-сортировка.jpg" alt="Сортировка">
-    <p>Попробуй найти номер ‘3052’ среди 40 одинаковых пакетов. Это челлендж на выживание.</p>
-    <p>На 3-й минуте я сделала себе таблицу, на 15-й — хотела бросить.</p>
-</section>
+      <section>
+        <h2 class="section-title">Планы на сезон</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Цель по уровню</h3>
+            <p>Например: выйти на уровень 9 к концу сезона.</p>
+          </div>
+          <div class="card">
+            <h3>Цель по ELO</h3>
+            <p>Опишите следующий рубеж и план его достижения.</p>
+          </div>
+          <div class="card">
+            <h3>Режимы</h3>
+            <p>Уточните, где хотите прокачаться (5v5, хабы и т.д.).</p>
+          </div>
+        </div>
+      </section>
+    </main>
 
-<section id="etap3">
-    <h2>Этап 3: “Стразы, пинцет и потерянные надежды”</h2>
-    <img src="ваше-фото-пинцет.jpg" alt="Пинцет и стразы">
-    <p>Пинцет — это оружие. Камни — мои враги. А ковёр — чёрная дыра, поглотившая 23 страза.</p>
-    <p>Я научился(ась) медитировать на тему ‘не бесись, всё ок’.</p>
-</section>
-
-<section id="etap4">
-    <h2>Этап 4: “Кричала, когда почти доделала, а кусок отвалился”</h2>
-    <img src="ваше-фото-готовая-мозаика.jpg" alt="Готовая мозаика">
-    <p>На этом этапе я разговаривала с работой. Просила её держаться.</p>
-    <p>Моя кошка ходила вокруг и смотрела с осуждением.</p>
-</section>
-
-<section id="final">
-    <h2>🏁 Финал: “УРА! Оно готово! И я всё ещё жива!”</h2>
-    <img src="ваше-фото-финал.jpg" alt="Готовая работа">
-    <p>Закончила. Выжила. Горжусь.</p>
-    <p>Пожалуйста, похвалите. Я заслужила).</p>
-    <p>На 78% из страз. На 100% из слёз и боли.</p>
-</section>
-
-<section class="advice">
-    <h2>🤓 Полезные советы от выжившего:</h2>
-    <ul>
-        <li>“Сортируй сразу. Не жди, что всё само разложится.”</li>
-        <li>“Делай по таймеру: иначе залипнешь на 6 часов и проснёшься уже старым(ой).”</li>
-        <li>“Стразы живут своей жизнью. Прими это.”</li>
-        <li>“Не ешь над мозаикой. Однажды ты поймёшь почему.”</li>
-    </ul>
-</section>
-
-<section id="conclusion">
-    <h2>🧠 Вывод:</h2>
-    <p>“Я поняла, что терпение — не просто слово. Это суперсила.”</p>
-    <p>“И что даже самые мелкие кусочки могут сложиться в шедевр.”</p>
-    <p>“...если ты не психанёшь раньше.”</p>
-</section>
-
-<footer>
-    <p>© 2025 Алмазная Мозаика | Все права защищены</p>
-</footer>
-
-</body>
+    <footer>
+      <p>© 2025 Faceit achievements — dosb1w. Обновляйте данные по мере роста.</p>
+    </footer>
+  </body>
 </html>
