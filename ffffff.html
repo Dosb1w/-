@@ -3,144 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Алмазная Мозаика: или как я чуть не поседела</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Faceit Hub — аналитика и командный поиск</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-            color: #333;
-        }
-        header {
-            background: url('ваше-фото-фон.jpg') no-repeat center center/cover;
-            color: white;
-            padding: 100px 20px;
-            text-align: center;
-        }
-        header h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        header p {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        header .button {
-            background-color: #f1c40f;
-            color: black;
-            padding: 15px 30px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        header .button:hover {
-            background-color: #e1b400;
-        }
-
-        section {
-            padding: 50px 20px;
-            text-align: center;
-        }
-        section h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        section p {
-            font-size: 18px;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto 30px auto;
-        }
-        section img {
-            width: 80%;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .advice {
-            background-color: #f39c12;
-            padding: 20px;
-            border-radius: 8px;
-            color: white;
-        }
-
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 20px;
+            font-family: "Manrope", sans-serif;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100">
+    <header class="border-b border-white/10 bg-slate-950/80 backdrop-blur">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-pink-500 text-lg font-bold">
+                    FH
+                </div>
+                <div>
+                    <p class="text-lg font-semibold">Faceit Hub</p>
+                    <p class="text-xs text-slate-400">Статистика, команда, турниры</p>
+                </div>
+            </div>
+            <nav class="hidden items-center gap-5 text-sm text-slate-300 md:flex">
+                <a class="transition hover:text-white" href="#dashboard">Dashboard</a>
+                <a class="transition hover:text-white" href="#profile">Профиль</a>
+                <a class="transition hover:text-white" href="#teammates">Тиммейты</a>
+                <a class="transition hover:text-white" href="#analysis">Анализ матчей</a>
+                <a class="transition hover:text-white" href="#tournaments">Турниры</a>
+                <a class="transition hover:text-white" href="#maps">Карты</a>
+            </nav>
+            <button class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition hover:border-white/60">
+                Войти через Faceit
+            </button>
+        </div>
+    </header>
 
-<header>
-    <h1>Привет. Меня зовут Марина, и я решила добровольно страдать. Добро пожаловать в мой алмазный ад.</h1>
-    <p>Казалось бы, что может пойти не так? Спойлер: всё.</p>
-    <a href="#etap1" class="button">Начать этот безумный путь</a>
-</header>
+    <main class="mx-auto max-w-6xl space-y-20 px-6 py-10">
+        <section id="dashboard" class="space-y-8">
+            <div class="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
+                <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-8 shadow-lg shadow-black/40">
+                    <p class="text-sm uppercase tracking-[0.2em] text-orange-300">Главная</p>
+                    <h1 class="mt-4 text-3xl font-bold md:text-4xl">Дайте ник — покажем полный обзор Faceit за секунды.</h1>
+                    <p class="mt-3 text-slate-300">Ищите профиль, проверяйте последние матчи и отслеживайте прогресс рейтинга в одном окне.</p>
+                    <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                        <input class="flex-1 rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="Введите никнейм Faceit" />
+                        <button class="rounded-2xl bg-orange-500 px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-orange-400">Показать статистику</button>
+                    </div>
+                    <div class="mt-8 grid gap-4 md:grid-cols-3">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                            <p class="text-xs uppercase text-slate-400">Последние матчи</p>
+                            <p class="mt-2 text-2xl font-semibold">12</p>
+                            <p class="text-xs text-slate-400">7 побед · 5 поражений</p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                            <p class="text-xs uppercase text-slate-400">Текущий уровень</p>
+                            <p class="mt-2 text-2xl font-semibold">Level 8</p>
+                            <p class="text-xs text-slate-400">ELO 1789</p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                            <p class="text-xs uppercase text-slate-400">Прогресс</p>
+                            <p class="mt-2 text-2xl font-semibold">+94</p>
+                            <p class="text-xs text-slate-400">за 14 дней</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-6">
+                    <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                        <h3 class="text-lg font-semibold">Быстрый доступ</h3>
+                        <div class="mt-4 space-y-3 text-sm text-slate-300">
+                            <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                                <span>Последние матчи</span>
+                                <span class="text-orange-300">Открыть</span>
+                            </div>
+                            <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                                <span>Прогресс ELO</span>
+                                <span class="text-orange-300">График</span>
+                            </div>
+                            <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                                <span>Командные приглашения</span>
+                                <span class="text-orange-300">3 новых</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                        <h3 class="text-lg font-semibold">Новости Faceit</h3>
+                        <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                            <li class="rounded-2xl bg-white/5 px-4 py-3">Новый сезон CS2 стартует 12 апреля — подготовьте команды.</li>
+                            <li class="rounded-2xl bg-white/5 px-4 py-3">API обновлён: доступны данные по карте и роли игрока.</li>
+                            <li class="rounded-2xl bg-white/5 px-4 py-3">Добавлены еженедельные турниры для уровней 4-7.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-<section id="etap1">
-    <h2>Этап 1: “Когда я ещё верил(а) в счастливый конец”</h2>
-    <img src="ваше-фото-распаковка.jpg" alt="Распаковка">
-    <p>Я думал(а), что это просто. Я ошибалась. На этом моменте ещё были силы и вера.</p>
-</section>
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                <button class="rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm font-semibold text-slate-200 hover:border-orange-400">Профиль</button>
+                <button class="rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm font-semibold text-slate-200 hover:border-orange-400">Тиммейты</button>
+                <button class="rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm font-semibold text-slate-200 hover:border-orange-400">Анализ матчей</button>
+                <button class="rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm font-semibold text-slate-200 hover:border-orange-400">Турниры</button>
+                <button class="rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm font-semibold text-slate-200 hover:border-orange-400">Карты</button>
+            </div>
+        </section>
 
-<section id="etap2">
-    <h2>Этап 2: “Сортировка или мини-ад на земле”</h2>
-    <img src="ваше-фото-сортировка.jpg" alt="Сортировка">
-    <p>Попробуй найти номер ‘3052’ среди 40 одинаковых пакетов. Это челлендж на выживание.</p>
-    <p>На 3-й минуте я сделала себе таблицу, на 15-й — хотела бросить.</p>
-</section>
+        <section id="profile" class="space-y-8">
+            <div class="flex flex-wrap items-end justify-between gap-6">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.2em] text-orange-300">Страница профиля</p>
+                    <h2 class="mt-3 text-3xl font-bold">Расширенная статистика игрока</h2>
+                </div>
+                <button class="rounded-full border border-white/20 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200">Сохранить как отчёт</button>
+            </div>
+            <div class="grid gap-6 lg:grid-cols-[0.6fr_1fr]">
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-pink-500 text-2xl font-bold">KR</div>
+                        <div>
+                            <p class="text-lg font-semibold">KiraStorm</p>
+                            <p class="text-sm text-slate-400">Level 8 · ELO 1789</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 space-y-4 text-sm text-slate-300">
+                        <div class="flex items-center justify-between">
+                            <span>Общий рейтинг</span>
+                            <span class="font-semibold text-white">Top 12%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>Роль</span>
+                            <span class="font-semibold text-white">Entry / IGL</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>Регион</span>
+                            <span class="font-semibold text-white">EU West</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid gap-4 md:grid-cols-3">
+                    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+                        <p class="text-xs uppercase text-slate-400">K/D</p>
+                        <p class="mt-2 text-2xl font-semibold">1.21</p>
+                        <p class="text-xs text-slate-400">+0.08 за месяц</p>
+                    </div>
+                    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+                        <p class="text-xs uppercase text-slate-400">Винрейт</p>
+                        <p class="mt-2 text-2xl font-semibold">56%</p>
+                        <p class="text-xs text-slate-400">14/25 побед</p>
+                    </div>
+                    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+                        <p class="text-xs uppercase text-slate-400">Очки за матч</p>
+                        <p class="mt-2 text-2xl font-semibold">24.6</p>
+                        <p class="text-xs text-slate-400">Среднее за 20 матчей</p>
+                    </div>
+                </div>
+            </div>
 
-<section id="etap3">
-    <h2>Этап 3: “Стразы, пинцет и потерянные надежды”</h2>
-    <img src="ваше-фото-пинцет.jpg" alt="Пинцет и стразы">
-    <p>Пинцет — это оружие. Камни — мои враги. А ковёр — чёрная дыра, поглотившая 23 страза.</p>
-    <p>Я научился(ась) медитировать на тему ‘не бесись, всё ок’.</p>
-</section>
+            <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Прогресс рейтинга (30 дней)</h3>
+                        <span class="text-xs text-slate-400">Chart.js / D3.js</span>
+                    </div>
+                    <div class="mt-6 h-40 rounded-2xl border border-dashed border-white/20 bg-gradient-to-r from-orange-500/10 via-pink-500/10 to-slate-900/20 p-4">
+                        <div class="flex h-full items-end justify-between text-xs text-slate-400">
+                            <span>1</span><span>7</span><span>14</span><span>21</span><span>30</span>
+                        </div>
+                        <div class="mt-4 h-20 rounded-xl bg-white/10"></div>
+                    </div>
+                </div>
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h3 class="text-lg font-semibold">Статистика по картам</h3>
+                    <div class="mt-4 space-y-4 text-sm text-slate-300">
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">
+                            <p class="font-semibold text-white">Лучшие: Mirage, Inferno</p>
+                            <p class="text-xs text-slate-400">Винрейт 62% · K/D 1.3</p>
+                        </div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">
+                            <p class="font-semibold text-white">Худшие: Nuke, Anubis</p>
+                            <p class="text-xs text-slate-400">Винрейт 41% · K/D 0.9</p>
+                        </div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">
+                            <p class="font-semibold text-white">Средние показатели</p>
+                            <p class="text-xs text-slate-400">Damage/round: 78 · HS%: 46%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<section id="etap4">
-    <h2>Этап 4: “Кричала, когда почти доделала, а кусок отвалился”</h2>
-    <img src="ваше-фото-готовая-мозаика.jpg" alt="Готовая мозаика">
-    <p>На этом этапе я разговаривала с работой. Просила её держаться.</p>
-    <p>Моя кошка ходила вокруг и смотрела с осуждением.</p>
-</section>
+            <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">История матчей</h3>
+                    <button class="text-xs uppercase tracking-wide text-orange-300">Скачать CSV</button>
+                </div>
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-xs uppercase text-slate-400">
+                            <tr>
+                                <th class="py-2">Дата</th>
+                                <th>Результат</th>
+                                <th>Карта</th>
+                                <th>Рейтинг</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-200">
+                            <tr class="border-t border-white/10">
+                                <td class="py-3">10.04</td>
+                                <td class="text-green-400">Победа 16-10</td>
+                                <td>Mirage</td>
+                                <td>+25</td>
+                            </tr>
+                            <tr class="border-t border-white/10">
+                                <td class="py-3">09.04</td>
+                                <td class="text-red-400">Поражение 13-16</td>
+                                <td>Nuke</td>
+                                <td>-18</td>
+                            </tr>
+                            <tr class="border-t border-white/10">
+                                <td class="py-3">08.04</td>
+                                <td class="text-green-400">Победа 16-12</td>
+                                <td>Inferno</td>
+                                <td>+22</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-<section id="final">
-    <h2>🏁 Финал: “УРА! Оно готово! И я всё ещё жива!”</h2>
-    <img src="ваше-фото-финал.jpg" alt="Готовая работа">
-    <p>Закончила. Выжила. Горжусь.</p>
-    <p>Пожалуйста, похвалите. Я заслужила).</p>
-    <p>На 78% из страз. На 100% из слёз и боли.</p>
-</section>
+        <section id="teammates" class="space-y-8">
+            <div>
+                <p class="text-sm uppercase tracking-[0.2em] text-orange-300">Поиск тиммейтов</p>
+                <h2 class="mt-3 text-3xl font-bold">Подберите игроков под стиль и расписание</h2>
+            </div>
+            <div class="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h3 class="text-lg font-semibold">Фильтры</h3>
+                    <div class="mt-4 space-y-4 text-sm text-slate-300">
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Уровень</p>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <span class="rounded-full border border-white/10 px-3 py-1">4-6</span>
+                                <span class="rounded-full border border-white/10 px-3 py-1">7-9</span>
+                                <span class="rounded-full border border-white/10 px-3 py-1">10</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Регион · язык</p>
+                            <p class="mt-2 rounded-2xl bg-white/5 px-3 py-2">EU West · RU/EN</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Роли</p>
+                            <p class="mt-2 rounded-2xl bg-white/5 px-3 py-2">Entry · Support · Lurker</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Время игры</p>
+                            <p class="mt-2 rounded-2xl bg-white/5 px-3 py-2">Будни 19:00-23:00</p>
+                        </div>
+                        <div class="flex items-center justify-between rounded-2xl bg-white/5 px-3 py-2">
+                            <span>Сортировка</span>
+                            <span class="text-orange-300">По винрейту</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid gap-4">
+                    <div class="flex items-center justify-between rounded-3xl border border-white/10 bg-slate-900 p-5">
+                        <div>
+                            <p class="font-semibold">LumaRise</p>
+                            <p class="text-xs text-slate-400">Level 7 · K/D 1.18 · 54% win</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-slate-900">Пригласить</button>
+                            <button class="rounded-full border border-white/20 px-4 py-2 text-xs">Скопировать ссылку</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between rounded-3xl border border-white/10 bg-slate-900 p-5">
+                        <div>
+                            <p class="font-semibold">StormIQ</p>
+                            <p class="text-xs text-slate-400">Level 8 · IGL · 61% win</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-slate-900">Пригласить</button>
+                            <button class="rounded-full border border-white/20 px-4 py-2 text-xs">Скопировать ссылку</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between rounded-3xl border border-white/10 bg-slate-900 p-5">
+                        <div>
+                            <p class="font-semibold">RavenShade</p>
+                            <p class="text-xs text-slate-400">Level 6 · Support · 49% win</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-slate-900">Пригласить</button>
+                            <button class="rounded-full border border-white/20 px-4 py-2 text-xs">Скопировать ссылку</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<section class="advice">
-    <h2>🤓 Полезные советы от выжившего:</h2>
-    <ul>
-        <li>“Сортируй сразу. Не жди, что всё само разложится.”</li>
-        <li>“Делай по таймеру: иначе залипнешь на 6 часов и проснёшься уже старым(ой).”</li>
-        <li>“Стразы живут своей жизнью. Прими это.”</li>
-        <li>“Не ешь над мозаикой. Однажды ты поймёшь почему.”</li>
-    </ul>
-</section>
+        <section id="analysis" class="space-y-8">
+            <div>
+                <p class="text-sm uppercase tracking-[0.2em] text-orange-300">Анализ матчей</p>
+                <h2 class="mt-3 text-3xl font-bold">Автоматические советы по улучшению игры</h2>
+            </div>
+            <div class="grid gap-6 lg:grid-cols-[1fr_1fr]">
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h3 class="text-lg font-semibold">Загрузка демо</h3>
+                    <p class="mt-2 text-sm text-slate-300">Загрузите файл матча или вставьте ссылку на демо для запуска аналитики.</p>
+                    <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+                        <input class="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm" placeholder="Ссылка на демо" />
+                        <button class="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-slate-900">Запустить анализ</button>
+                    </div>
+                    <div class="mt-6 rounded-2xl border border-dashed border-white/20 p-4 text-xs text-slate-400">Поддержка внешних парсеров: Leetify, Scope.gg, Faceit Demo API.</div>
+                </div>
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h3 class="text-lg font-semibold">Найденные инсайты</h3>
+                    <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                        <li class="rounded-2xl bg-white/5 px-4 py-3">Частые смерти на Dust2 (позиция long) — 32% от всех.</li>
+                        <li class="rounded-2xl bg-white/5 px-4 py-3">Средняя дистанция стрельбы выше нормы — используйте удержание углов.</li>
+                        <li class="rounded-2xl bg-white/5 px-4 py-3">Лучший раунд: Mirage, entry kill за 18 секунд.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">Визуализация активности на карте</h3>
+                    <span class="text-xs text-slate-400">Heatmap</span>
+                </div>
+                <div class="mt-4 grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
+                    <div class="rounded-2xl border border-dashed border-white/20 bg-gradient-to-br from-green-500/10 via-slate-900 to-red-500/10 p-6">
+                        <p class="text-xs text-slate-400">Карта: Mirage · фильтр 15 минут</p>
+                        <div class="mt-6 h-40 rounded-2xl bg-white/10"></div>
+                    </div>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Красные точки — смерти, зеленые — фраги.</div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Совет: избегайте позиции «Underpass» на CT side.</div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Фильтр по времени: первые 5 минут, mid round, retake.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<section id="conclusion">
-    <h2>🧠 Вывод:</h2>
-    <p>“Я поняла, что терпение — не просто слово. Это суперсила.”</p>
-    <p>“И что даже самые мелкие кусочки могут сложиться в шедевр.”</p>
-    <p>“...если ты не психанёшь раньше.”</p>
-</section>
+        <section id="tournaments" class="space-y-8">
+            <div>
+                <p class="text-sm uppercase tracking-[0.2em] text-orange-300">Турниры</p>
+                <h2 class="mt-3 text-3xl font-bold">Организуйте и участвуйте в турнирах</h2>
+            </div>
+            <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h3 class="text-lg font-semibold">Активные турниры</h3>
+                    <div class="mt-4 space-y-3 text-sm text-slate-300">
+                        <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                            <div>
+                                <p class="font-semibold text-white">Faceit Open Cup</p>
+                                <p class="text-xs text-slate-400">EU · Level 7-10 · 24 команды</p>
+                            </div>
+                            <button class="rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-slate-900">Присоединиться</button>
+                        </div>
+                        <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                            <div>
+                                <p class="font-semibold text-white">Regional Showdown</p>
+                                <p class="text-xs text-slate-400">RU · Level 4-8 · 18 команд</p>
+                            </div>
+                            <button class="rounded-full border border-white/20 px-4 py-2 text-xs">В лист ожидания</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h3 class="text-lg font-semibold">Создать турнир</h3>
+                    <div class="mt-4 space-y-3 text-sm text-slate-300">
+                        <input class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3" placeholder="Название турнира" />
+                        <input class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3" placeholder="Дата проведения" />
+                        <input class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3" placeholder="Формат (BO1/BO3)" />
+                        <div class="rounded-2xl border border-dashed border-white/20 px-4 py-3 text-xs text-slate-400">Автоматический подсчёт очков и таблица лидеров будут созданы автоматически.</div>
+                        <button class="w-full rounded-2xl bg-orange-500 px-4 py-3 text-sm font-semibold text-slate-900">Создать</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<footer>
-    <p>© 2025 Алмазная Мозаика | Все права защищены</p>
-</footer>
+        <section id="maps" class="space-y-8">
+            <div>
+                <p class="text-sm uppercase tracking-[0.2em] text-orange-300">Интерактивные карты</p>
+                <h2 class="mt-3 text-3xl font-bold">Позиции, где происходят ключевые события</h2>
+            </div>
+            <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h3 class="text-lg font-semibold">Параметры карты</h3>
+                    <div class="mt-4 space-y-4 text-sm text-slate-300">
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Карта: Ancient</div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Фильтр: первые 10 минут</div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Сторона: CT</div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Совет: не стойте на «Temple» без флеша.</div>
+                    </div>
+                </div>
+                <div class="rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Heatmap событий</h3>
+                        <button class="text-xs uppercase tracking-wide text-orange-300">Сменить карту</button>
+                    </div>
+                    <div class="mt-4 h-64 rounded-2xl border border-dashed border-white/20 bg-gradient-to-br from-green-500/10 via-slate-900 to-red-500/10"></div>
+                    <div class="mt-4 grid gap-3 text-sm text-slate-300">
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Красные точки — частые смерти игрока.</div>
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">Зеленые точки — убийства игрока.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section class="rounded-3xl border border-white/10 bg-slate-900 p-8">
+            <h2 class="text-2xl font-bold">Техническая реализация</h2>
+            <div class="mt-4 grid gap-4 text-sm text-slate-300 md:grid-cols-2">
+                <div class="rounded-2xl bg-white/5 px-4 py-3">Frontend: React + Tailwind для быстрой сборки UI.</div>
+                <div class="rounded-2xl bg-white/5 px-4 py-3">Backend: Node.js/Express или Python FastAPI.</div>
+                <div class="rounded-2xl bg-white/5 px-4 py-3">API: Faceit API для профилей, матчей и статистики.</div>
+                <div class="rounded-2xl bg-white/5 px-4 py-3">База данных: MongoDB или PostgreSQL.</div>
+                <div class="rounded-2xl bg-white/5 px-4 py-3">Графики: Chart.js или D3.js.</div>
+                <div class="rounded-2xl bg-white/5 px-4 py-3">Авторизация: Faceit OAuth для личного доступа.</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/10 bg-slate-950/80">
+        <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-slate-400 md:flex-row">
+            <p>© 2025 Faceit Hub. Все права защищены.</p>
+            <div class="flex items-center gap-4">
+                <span>RSS</span>
+                <span>API статус</span>
+                <span>Политика</span>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
