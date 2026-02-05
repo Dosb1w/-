@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faceit Достижения — dosb1w</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0f14;
+        --card: #141b23;
+        --accent: #ff5500;
+        --text: #e8eef5;
+        --muted: #9aa7b7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background: radial-gradient(circle at top, #1b2633 0%, #0b0f14 55%);
+        color: var(--text);
+      }
+
+      header {
+        padding: 80px 20px 40px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 40px;
+        margin-bottom: 12px;
+      }
+
+      header p {
+        max-width: 720px;
+        margin: 0 auto 20px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .button {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 14px 28px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
+      }
+
+      .hero-cards {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin-top: 28px;
+      }
+
+      .hero-card {
+        background: linear-gradient(145deg, rgba(255, 85, 0, 0.18), rgba(20, 27, 35, 0.9));
+        border: 1px solid rgba(255, 85, 0, 0.4);
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .hero-card span {
+        display: block;
+        font-size: 28px;
+        font-weight: 700;
+        margin-top: 8px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .card {
+        background: var(--card);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .card h3 {
+        margin: 0 0 12px;
+        font-size: 18px;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .section-title {
+        margin: 48px 0 18px;
+        font-size: 26px;
+      }
+
+      .highlight {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .achievements {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .achievements li {
+        background: rgba(255, 85, 0, 0.08);
+        border: 1px solid rgba(255, 85, 0, 0.3);
+        padding: 14px 18px;
+        border-radius: 12px;
+      }
+
+      .stats-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .stats-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        background: rgba(20, 27, 35, 0.8);
+        border-radius: 12px;
+      }
+
+      .stats-list strong {
+        font-size: 18px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 32px 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Faceit-резюме игрока <span class="highlight">dosb1w</span></h1>
+      <p>
+        Здесь собраны ключевые достижения и прогресс на Faceit. Данные можно
+        обновлять вручную, чтобы страница всегда показывала актуальные результаты.
+      </p>
+      <a class="button" href="https://www.faceit.com/ru/players/dosb1w" target="_blank" rel="noreferrer">
+        Открыть профиль Faceit
+      </a>
+      <div class="hero-cards">
+        <div class="hero-card">
+          Уровень Faceit
+          <span>9</span>
+        </div>
+        <div class="hero-card">
+          Текущий ELO
+          <span>1 950</span>
+        </div>
+        <div class="hero-card">
+          До следующего ранга
+          <span>50 ELO</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">Краткая статистика</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Текущий уровень</h3>
+            <p>Уровень 9 с текущим ELO 1 950.</p>
+          </div>
+          <div class="card">
+            <h3>Лучший и минимальный ELO</h3>
+            <p>Максимум 2 370, минимум 1 856, изменение -420.</p>
+          </div>
+          <div class="card">
+            <h3>Матчи</h3>
+            <p>Сыграно 1 580 матчей, winrate 49%.</p>
+          </div>
+          <div class="card">
+            <h3>Лучшая серия побед</h3>
+            <p>12 побед подряд.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Главные достижения</h2>
+        <ul class="achievements">
+          <li>🔥 Лучшая серия побед: 12 матчей подряд.</li>
+          <li>🎯 Рекорд по ELO: 2 370 (текущий 1 950).</li>
+          <li>💪 Стабильный опыт: 1 580 сыгранных матчей.</li>
+          <li>🗓️ В игре с 7 августа 2020 года.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="section-title">Статистика производительности</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Performance statistics</h3>
+            <ul class="stats-list">
+              <li><span>K/D/A</span> <strong>16 / 17 / 5</strong></li>
+              <li><span>K/R</span> <strong>0.92</strong></li>
+              <li><span>K/D</span> <strong>0.70</strong></li>
+              <li><span>HS%</span> <strong>48%</strong></li>
+              <li><span>ADR</span> <strong>78.0</strong></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Последние 30 матчей</h3>
+            <ul class="stats-list">
+              <li><span>Победы</span> <strong>50%</strong></li>
+              <li><span>K/D/A</span> <strong>17 / 17 / 5</strong></li>
+              <li><span>K/D</span> <strong>0.98</strong></li>
+              <li><span>K/R</span> <strong>0.74</strong></li>
+              <li><span>HS%</span> <strong>47%</strong></li>
+              <li><span>ADR</span> <strong>81.0</strong></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Форма и тенденции</h3>
+            <ul class="stats-list">
+              <li><span>Баланс матчей</span> <strong>W 36 / L 54</strong></li>
+              <li><span>Winrate общий</span> <strong>49%</strong></li>
+              <li><span>До следующего уровня</span> <strong>50 ELO</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Цели на следующий шаг</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Цель по уровню</h3>
+            <p>Закрепиться на уровне 9 и выйти на уровень 10.</p>
+          </div>
+          <div class="card">
+            <h3>Цель по ELO</h3>
+            <p>Вернуться к планке 2 000+ ELO и обновить пик.</p>
+          </div>
+          <div class="card">
+            <h3>Режимы</h3>
+            <p>Фокус на 5v5, работа над командной игрой и маппулом.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2025 Faceit achievements — dosb1w. Обновляйте данные по мере роста.</p>
+    </footer>
+  </body>
+</html>
