@@ -1,0 +1,159 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #050505;
+  color: #fff;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: #090909;
+  transition: filter 0.2s ease;
+}
+
+.app--bright {
+  filter: brightness(1.2);
+}
+
+.header h1 {
+  margin: 8px 0 14px;
+  font-size: 24px;
+}
+
+.screen {
+  flex: 1;
+}
+
+.cards-list {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 88px;
+}
+
+.empty-state {
+  border: 1px dashed #333;
+  border-radius: 14px;
+  padding: 20px;
+  color: #c2c2c2;
+}
+
+.card-item {
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  text-align: left;
+  padding: 14px;
+  min-height: 106px;
+}
+
+.card-store {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.card-number,
+.card-points {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.fixed-btn {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 20px;
+}
+
+.primary-btn,
+.secondary-btn {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 12px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.primary-btn {
+  background: #2563eb;
+}
+
+.secondary-btn {
+  background: #374151;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.form label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+
+select,
+input {
+  border-radius: 10px;
+  min-height: 44px;
+  border: 1px solid #303030;
+  background: #111827;
+  color: #fff;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+.barcode-screen {
+  display: grid;
+  gap: 16px;
+}
+
+.barcode-box {
+  background: #121212;
+  border: 1px solid #2f2f2f;
+  border-radius: 12px;
+  padding: 14px;
+  overflow: auto;
+}
+
+.barcode-box svg {
+  width: 100%;
+  min-width: 260px;
+  height: 120px;
+}
+
+.barcode-number {
+  text-align: center;
+  color: #e5e7eb;
+}
+
+.actions-row {
+  display: grid;
+  gap: 10px;
+}
+
+.footer {
+  padding: 10px 0 0;
+}
+
+.text-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: #ddd;
+  min-height: 42px;
+  width: 100%;
+  border-radius: 10px;
+}
