@@ -1,171 +1,297 @@
-:root {
-  color-scheme: dark;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  margin: 0;
-  background: #050505;
-  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  background: #0a0a0f;
+  color: #ffffff;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .app {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  background: #090909;
-  transition: filter 0.2s ease;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
-.app--bright {
-  filter: brightness(1.2);
+/* HEADER */
+.header {
+  padding: 20px 20px 8px;
 }
 
 .header h1 {
-  margin: 8px 0 14px;
-  font-size: 24px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
 }
 
+/* SCREENS */
 .screen {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px 100px;
 }
 
+/* HOME */
 .cards-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  padding-bottom: 88px;
 }
 
 .empty-state {
-  border: 1px dashed #333;
-  border-radius: 14px;
-  padding: 20px;
-  color: #c2c2c2;
+  text-align: center;
+  color: rgba(255,255,255,0.3);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 60px 20px;
+  line-height: 1.6;
 }
 
 .card-item {
+  width: 100%;
   border: none;
-  border-radius: 14px;
-  color: #fff;
+  border-radius: 20px;
+  padding: 20px;
   text-align: left;
-  padding: 14px;
-  min-height: 106px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  min-height: 100px;
+}
+
+.card-item:active {
+  transform: scale(0.97);
+}
+
+.card-item::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  transform: translate(20px, -20px);
+}
+
+.card-item::before {
+  content: '▐▌▐▐▌▐▌▐▌';
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  font-size: 22px;
+  letter-spacing: 2px;
+  opacity: 0.25;
 }
 
 .card-store {
-  font-size: 20px;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
 }
 
-.card-number,
-.card-points {
-  margin-top: 8px;
-  font-size: 16px;
+.card-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 12px;
 }
 
+.card-number {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+/* ADD BUTTON */
 .fixed-btn {
   position: fixed;
+  bottom: 20px;
   left: 16px;
   right: 16px;
-  bottom: 20px;
+  max-width: 448px;
+  margin: 0 auto;
+  z-index: 100;
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.4);
 }
 
-.danger-btn {
-  flex: 1;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #dc2626;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.primary-btn,
-.secondary-btn {
-  width: 100%;
-  min-height: 52px;
-  border-radius: 12px;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.primary-btn {
-  background: #2563eb;
-}
-
-.secondary-btn {
-  background: #374151;
-}
-
-.form {
-  display: grid;
-  gap: 12px;
-}
-
-.form label {
-  display: grid;
-  gap: 8px;
-  font-size: 14px;
-}
-
-select,
-input {
-  border-radius: 10px;
-  min-height: 44px;
-  border: 1px solid #303030;
-  background: #111827;
-  color: #fff;
-  padding: 0 10px;
-  font-size: 16px;
-}
-
+/* BARCODE SCREEN */
 .barcode-screen {
-  display: grid;
-  gap: 16px;
+  padding: 12px 16px 24px;
+  align-items: center;
+}
+
+.barcode-screen h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  align-self: flex-start;
 }
 
 .barcode-box {
-  background: #121212;
-  border: 1px solid #2f2f2f;
-  border-radius: 12px;
-  padding: 14px;
-  overflow: auto;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  margin-bottom: 16px;
 }
 
 .barcode-box svg {
   width: 100%;
-  min-width: 260px;
-  height: 120px;
+  max-width: 300px;
+}
+
+.qr-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-container img,
+.qr-container canvas {
+  border-radius: 8px;
 }
 
 .barcode-number {
-  text-align: center;
-  color: #e5e7eb;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.6);
+  font-family: monospace;
+  margin-bottom: 32px;
 }
 
 .actions-row {
-  display: grid;
-  gap: 10px;
-}
-
-.footer {
-  padding: 10px 0 0;
-}
-
-.text-btn {
-  background: transparent;
-  border: 1px solid #444;
-  color: #ddd;
-  min-height: 42px;
+  display: flex;
+  gap: 12px;
   width: 100%;
-  border-radius: 10px;
+  margin-top: auto;
+}
+
+/* ADD SCREEN */
+.add-screen {
+  padding: 12px 16px 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.3px;
+}
+
+.form select,
+.form input {
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+
+.form select:focus,
+.form input:focus {
+  border-color: rgba(255,255,255,0.25);
+}
+
+.form input::placeholder {
+  color: rgba(255,255,255,0.2);
+}
+
+/* BUTTONS */
+.primary-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  letter-spacing: 0.2px;
+}
+
+.primary-btn:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.secondary-btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.secondary-btn:active {
+  opacity: 0.7;
+}
+
+.danger-btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(220, 38, 38, 0.15);
+  color: #f87171;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.danger-btn:active {
+  opacity: 0.7;
+}
+
+/* FOOTER — скрываем кнопку закрытия */
+.footer {
+  display: none;
 }
