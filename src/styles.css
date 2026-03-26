@@ -75,6 +75,18 @@ body {
   bottom: 20px;
 }
 
+.danger-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #dc2626;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .primary-btn,
 .secondary-btn {
   width: 100%;

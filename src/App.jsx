@@ -3,10 +3,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 const STORES = ['Пятёрочка', 'Магнит', 'Красное&Белое', 'Бристоль'];
 
 const STORE_CONFIG = {
-  'Пятёрочка': { color: '#65a30d' },
-  Магнит: { color: '#dc2626' },
-  'Красное&Белое': { color: '#b91c1c' },
-  Бристоль: { color: '#0f766e' },
+  'Пятёрочка': { color: '#65a30d', qr: true },
+  'Магнит':    { color: '#dc2626', qr: true },
+  'Красное&Белое': { color: '#b91c1c', qr: false },
+  'Бристоль':  { color: '#0f766e', qr: false },
 };
 
 const STORAGE_KEY = 'loyalty-cards';
@@ -25,8 +25,8 @@ function App() {
   const [cards, setCards] = useState([]);
   const [store, setStore] = useState(STORES[0]);
   const [number, setNumber] = useState('');
-  const [highBrightness, setHighBrightness] = useState(false);
   const barcodeRef = useRef(null);
+  const qrRef = useRef(null);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -47,7 +47,6 @@ function App() {
     if (!tg) return;
     tg.ready();
     tg.expand();
-
     const color = tg.colorScheme === 'light' ? '#111111' : '#050505';
     tg.setBackgroundColor(color);
     tg.setHeaderColor(color);
@@ -58,8 +57,12 @@ function App() {
     [cards, selectedCardId],
   );
 
+  const isQrStore = selectedCard ? STORE_CONFIG[selectedCard.store]?.qr : false;
+
+  // Штрихкод для обычных магазинов
   useEffect(() => {
-    if (screen !== 'barcode' || !selectedCard || !barcodeRef.current || !window.JsBarcode) return;
+    if (screen !== 'barcode' || !selectedCard || isQrStore) return;
+    if (!barcodeRef.current || !window.JsBarcode) return;
 
     window.JsBarcode(barcodeRef.current, selectedCard.number, {
       format: 'CODE128',
@@ -70,11 +73,33 @@ function App() {
       displayValue: false,
       margin: 0,
     });
-  }, [screen, selectedCard]);
+  }, [screen, selectedCard, isQrStore]);
+
+  // QR-код для Пятёрочки и Магнита
+  useEffect(() => {
+    if (screen !== 'barcode' || !selectedCard || !isQrStore) return;
+    if (!qrRef.current || !window.QRCode) return;
+
+    qrRef.current.innerHTML = '';
+    new window.QRCode(qrRef.current, {
+      text: selectedCard.number,
+      width: 200,
+      height: 200,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: window.QRCode.CorrectLevel.M,
+    });
+  }, [screen, selectedCard, isQrStore]);
 
   function openBarcode(cardId) {
     setSelectedCardId(cardId);
     setScreen('barcode');
+  }
+
+  function deleteCard(cardId) {
+    if (!window.confirm('Удалить эту карту?')) return;
+    setCards((prev) => prev.filter((c) => c.id !== cardId));
+    setScreen('home');
   }
 
   function saveCard(event) {
@@ -85,7 +110,6 @@ function App() {
       id: crypto.randomUUID(),
       store,
       number: number.trim(),
-      points: Math.floor(Math.random() * 4000),
     };
 
     setCards((prev) => [card, ...prev]);
@@ -94,23 +118,8 @@ function App() {
     setScreen('home');
   }
 
-  async function increaseBrightness() {
-    setHighBrightness(true);
-    if (window.screen?.orientation?.lock) {
-      try {
-        await window.screen.orientation.lock('landscape');
-      } catch {
-        // Не все устройства разрешают lock без fullscreen.
-      }
-    }
-  }
-
   function goBack() {
     setScreen('home');
-    if (window.screen?.orientation?.unlock) {
-      window.screen.orientation.unlock();
-    }
-    setHighBrightness(false);
   }
 
   function closeMiniApp() {
@@ -118,7 +127,7 @@ function App() {
   }
 
   return (
-    <div className={`app ${highBrightness ? 'app--bright' : ''}`}>
+    <div className="app">
       <header className="header">
         <h1>Карты лояльности</h1>
       </header>
@@ -129,18 +138,16 @@ function App() {
             {cards.length === 0 && (
               <div className="empty-state">Добавьте первую карту, чтобы видеть её здесь.</div>
             )}
-
             {cards.map((card) => (
               <button
                 type="button"
                 key={card.id}
                 className="card-item"
-                style={{ backgroundColor: STORE_CONFIG[card.store].color }}
+                style={{ backgroundColor: STORE_CONFIG[card.store]?.color }}
                 onClick={() => openBarcode(card.id)}
               >
                 <div className="card-store">{card.store}</div>
                 <div className="card-number">{maskCardNumber(card.number)}</div>
-                <div className="card-points">Баллы: {card.points}</div>
               </button>
             ))}
           </div>
@@ -154,17 +161,27 @@ function App() {
       {screen === 'barcode' && selectedCard && (
         <main className="screen barcode-screen">
           <h2>{selectedCard.store}</h2>
+
           <div className="barcode-box">
-            <svg ref={barcodeRef} />
+            {isQrStore ? (
+              <div ref={qrRef} className="qr-container" />
+            ) : (
+              <svg ref={barcodeRef} />
+            )}
           </div>
+
           <p className="barcode-number">{selectedCard.number}</p>
 
           <div className="actions-row">
             <button type="button" className="secondary-btn" onClick={goBack}>
               Назад
             </button>
-            <button type="button" className="primary-btn" onClick={increaseBrightness}>
-              Повысить яркость
+            <button
+              type="button"
+              className="danger-btn"
+              onClick={() => deleteCard(selectedCard.id)}
+            >
+              Удалить карту
             </button>
           </div>
         </main>
