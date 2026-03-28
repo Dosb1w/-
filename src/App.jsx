@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const STORE_CONFIG = {
-  'Пятёрочка':        { color: '#16a34a', qr: true,  category: 'Супермаркеты', digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1048350495', instruction: 'Скачайте приложение → Войдите по номеру телефона → Раздел «Карта» → скопируйте номер под штрихкодом' },
-  'Магнит':           { color: '#dc2626', qr: true,  category: 'Супермаркеты', digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1126831536', instruction: 'Скачайте приложение → Войдите по номеру телефона → Главный экран → номер карты под QR-кодом' },
-  'Красное&Белое':    { color: '#b91c1c', qr: false, category: 'Супермаркеты', digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1435869078', instruction: 'Скачайте приложение → Зарегистрируйтесь → Вкладка «Карта» → номер указан под штрихкодом' },
-  'Бристоль':         { color: '#0f766e', qr: false, category: 'Супермаркеты', digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1534350882', instruction: 'Скачайте приложение → Войдите → Вкладка «Карта» → номер карты под штрихкодом' },
-  'ВкусВилл':         { color: '#65a30d', qr: false, category: 'Супермаркеты', digits: 16, appUrl: 'https://apps.apple.com/ru/app/id1148348339', instruction: 'Скачайте приложение → Войдите по телефону → Раздел «Кошелёк» → номер виртуальной карты' },
-  'Лента':            { color: '#f59e0b', qr: false, category: 'Супермаркеты', digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1095371758', instruction: 'Скачайте приложение → Войдите → Главный экран → карточка с балансом → номер под штрихкодом' },
-  'Перекрёсток':      { color: '#2563eb', qr: false, category: 'Супермаркеты', digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1262668866', instruction: 'Скачайте приложение → Войдите → Вкладка «Карта» → номер указан под штрихкодом' },
+  'Пятёрочка':        { color: '#16a34a', qr: true,  category: 'Супермаркеты', digits: 16, appUrl: 'https://5ka.ru/app/', instruction: 'Скачайте приложение → Войдите по номеру телефона → Раздел «Карта» → скопируйте номер под штрихкодом' },
+  'Магнит':           { color: '#dc2626', qr: true,  category: 'Супермаркеты', digits: 16, appUrl: 'https://magnit.ru/promo/app/', instruction: 'Скачайте приложение → Войдите по номеру телефона → Главный экран → номер карты под QR-кодом' },
+  'Красное&Белое':    { color: '#b91c1c', qr: false, category: 'Супермаркеты', digits: 16, appUrl: 'https://krasnoeibeloe.ru/', instruction: 'Скачайте приложение → Зарегистрируйтесь → Вкладка «Карта» → номер указан под штрихкодом' },
+  'Бристоль':         { color: '#0f766e', qr: false, category: 'Супермаркеты', digits: 16, appUrl: 'https://bristol.ru/', instruction: 'Скачайте приложение → Войдите → Вкладка «Карта» → номер карты под штрихкодом' },
+  'ВкусВилл':         { color: '#65a30d', qr: false, category: 'Супермаркеты', digits: 16, appUrl: 'https://vkusvill.ru/app/', instruction: 'Скачайте приложение → Войдите по телефону → Раздел «Кошелёк» → номер виртуальной карты' },
+  'Лента':            { color: '#f59e0b', qr: false, category: 'Супермаркеты', digits: 16, appUrl: 'https://lenta.com/app/', instruction: 'Скачайте приложение → Войдите → Главный экран → карточка с балансом → номер под штрихкодом' },
+  'Перекрёсток':      { color: '#2563eb', qr: false, category: 'Супермаркеты', digits: 16, appUrl: 'https://perekrestok.ru/app/', instruction: 'Скачайте приложение → Войдите → Вкладка «Карта» → номер указан под штрихкодом' },
   'Сималенд':         { color: '#7c3aed', qr: false, category: 'Другое',       digits: 16, appUrl: 'https://www.simaland.ru', instruction: 'Зайдите на сайт simaland.ru → Войдите в аккаунт → Раздел «Мои данные» → номер карты покупателя' },
-  'Аптека Вита':      { color: '#0891b2', qr: false, category: 'Аптеки',       digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1462385864', instruction: 'Скачайте приложение → Зарегистрируйтесь → Раздел «Карта» → номер под штрихкодом' },
-  'Планета Здоровья': { color: '#059669', qr: false, category: 'Аптеки',       digits: 13, appUrl: 'https://apps.apple.com/ru/app/id1434048949', instruction: 'Скачайте приложение → Войдите по телефону → Главный экран → номер карты виден сразу' },
+  'Аптека Вита':      { color: '#0891b2', qr: false, category: 'Аптеки',       digits: 16, appUrl: 'https://vitaexpress.ru/', instruction: 'Скачайте приложение → Зарегистрируйтесь → Раздел «Карта» → номер под штрихкодом' },
+  'Планета Здоровья': { color: '#059669', qr: false, category: 'Аптеки',       digits: 16, appUrl: 'https://planetazdorovo.ru/', instruction: 'Скачайте приложение → Войдите по телефону → Главный экран → номер карты виден сразу' },
 };
 
 const STORES = Object.keys(STORE_CONFIG);
@@ -200,8 +200,20 @@ function App() {
           </div>
           <div className="detail-section">
             <div className="detail-section-title">📲 Как скачать приложение</div>
-            <a className="app-link" href={STORE_CONFIG[selectedStore].appUrl} target="_blank" rel="noreferrer">
-              Открыть в App Store / Google Play →
+            <a className="app-link"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              const link = STORE_CONFIG[selectedStore].appUrl;
+              
+              if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.openLink(link);
+              } else {
+                window.open(link, '_blank');
+              }
+            }}
+            > 
+            Ссылки
             </a>
           </div>
           <div className="detail-section">
