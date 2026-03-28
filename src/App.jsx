@@ -34,10 +34,24 @@ function App() {
   const [store, setStore] = useState(STORES[0]);
   const [number, setNumber] = useState('');
   const [numberError, setNumberError] = useState('');
+
+  // Сканирование
+  const [scanPreview, setScanPreview] = useState(null);
+  const [scanStatus, setScanStatus] = useState(''); // 'cropping' | 'scanning' | 'error' | ''
+  const cropperRef = useRef(null);
+  const cropImageRef = useRef(null);
+
   const barcodeRef = useRef(null);
   const qrRef = useRef(null);
 
+  // Загрузка карт
   useEffect(() => {
+    // Миграция старых данных
+    const oldData = localStorage.getItem('loyalty-cards');
+    if (oldData) {
+      localStorage.setItem(STORAGE_KEY, oldData);
+      localStorage.removeItem('loyalty-cards');
+    }
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try { setCards(JSON.parse(saved)); } catch { localStorage.removeItem(STORAGE_KEY); }
@@ -76,6 +90,21 @@ function App() {
       correctLevel: window.QRCode.CorrectLevel.M,
     });
   }, [screen, selectedCard, isQrStore]);
+
+  // Инициализация кроппера после появления изображения
+  useEffect(() => {
+    if (!scanPreview || !cropImageRef.current || !window.Cropper) return;
+    if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null; }
+    const img = cropImageRef.current;
+    img.onload = () => {
+      cropperRef.current = new window.Cropper(img, {
+        viewMode: 1,
+        aspectRatio: NaN,
+        autoCropArea: 0.8,
+      });
+    };
+    if (img.complete) img.onload();
+  }, [scanPreview]);
 
   function openBarcode(cardId) { setSelectedCardId(cardId); setScreen('barcode'); }
   function openCatalogDetail(storeName) { setSelectedStoreName(storeName); setScreen('catalog-detail'); }
@@ -117,13 +146,84 @@ function App() {
     setTab('home');
   }
 
+  // Загрузка фото
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    e.target.value = '';
+    const url = URL.createObjectURL(file);
+    setScanPreview(url);
+    setScanStatus('cropping');
+    setNumberError('');
+  }
+
+  // Распознавание после обрезки
+  async function handleCrop() {
+    if (!cropperRef.current) return;
+    setScanStatus('scanning');
+
+    const canvas = cropperRef.current.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200 });
+
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], 'cropped.png', { type: 'image/png' });
+
+      if (!window.Html5Qrcode) {
+        setScanStatus('error');
+        setNumberError('Библиотека сканирования не загружена');
+        setScanPreview(null);
+        return;
+      }
+
+      // Создаём временный div для сканера
+      let tempDiv = document.getElementById('reader-temp');
+      if (!tempDiv) {
+        tempDiv = document.createElement('div');
+        tempDiv.id = 'reader-temp';
+        tempDiv.style.display = 'none';
+        document.body.appendChild(tempDiv);
+      }
+
+      const scanner = new window.Html5Qrcode('reader-temp');
+      try {
+        const result = await scanner.scanFile(file, true);
+        const clean = result.replace(/\D/g, '');
+        if (clean && clean.length >= 8) {
+          setNumber(clean.slice(0, STORE_CONFIG[store]?.digits || 16));
+          setNumberError('');
+          setScanStatus('');
+          setScanPreview(null);
+          if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null; }
+        } else {
+          setScanStatus('error');
+          setNumberError('Номер не распознан — попробуйте обрезать точнее');
+        }
+      } catch {
+        setScanStatus('error');
+        setNumberError('Не удалось распознать — обрежьте только штрихкод или QR');
+      }
+    }, 'image/png');
+  }
+
+  function cancelScan() {
+    if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null; }
+    setScanPreview(null);
+    setScanStatus('');
+    setNumberError('');
+  }
+
   function goHome() { setScreen('home'); setTab('home'); }
   const alreadyAdded = (storeName) => cards.some(c => c.store === storeName);
 
   return (
     <div className="app">
       <header className="header">
-        <h1>{screen === 'barcode' ? selectedCard?.store : screen === 'catalog-detail' ? selectedStore : screen === 'add' ? 'Добавить карту' : tab === 'home' ? 'Мои карты' : 'Каталог'}</h1>
+        <h1>
+          {screen === 'barcode' ? selectedCard?.store
+            : screen === 'catalog-detail' ? selectedStore
+            : screen === 'add' ? `Добавить — ${store}`
+            : tab === 'home' ? 'Мои карты'
+            : 'Каталог'}
+        </h1>
       </header>
 
       {/* HOME */}
@@ -200,20 +300,14 @@ function App() {
           </div>
           <div className="detail-section">
             <div className="detail-section-title">📲 Как скачать приложение</div>
-            <a className="app-link"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              const link = STORE_CONFIG[selectedStore].appUrl;
-              
-              if (window.Telegram?.WebApp) {
-                window.Telegram.WebApp.openLink(link);
-              } else {
-                window.open(link, '_blank');
-              }
-            }}
-            > 
-            Ссылки
+            <a className="app-link" href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                const link = STORE_CONFIG[selectedStore].appUrl;
+                if (window.Telegram?.WebApp) window.Telegram.WebApp.openLink(link);
+                else window.open(link, '_blank');
+              }}>
+              Открыть ссылку →
             </a>
           </div>
           <div className="detail-section">
@@ -223,7 +317,7 @@ function App() {
           {alreadyAdded(selectedStore)
             ? <div className="already-added-msg">✓ Эта карта уже добавлена</div>
             : <button className="primary-btn" type="button"
-                onClick={() => { setStore(selectedStore); setNumber(''); setNumberError(''); setScreen('add'); }}>
+                onClick={() => { setStore(selectedStore); setNumber(''); setNumberError(''); setScanPreview(null); setScanStatus(''); setScreen('add'); }}>
                 Добавить карту
               </button>}
         </main>
@@ -233,24 +327,57 @@ function App() {
       {screen === 'add' && (
         <main className="screen add-screen">
           <button className="back-link" type="button"
-            onClick={() => setScreen('catalog-detail')}>← Назад</button>
-          <form className="form" onSubmit={saveCard}>
-            <label>
-              Номер карты
-              <input
-                type="text" inputMode="numeric"
-                placeholder={`Введите ${STORE_CONFIG[store]?.digits || 16} цифр`}
-                value={number} onChange={handleNumberChange}
-                maxLength={STORE_CONFIG[store]?.digits || 16} required autoFocus
-              />
-              {numberError
-                ? <span className="field-error">{numberError}</span>
-                : <span className="field-hint">{number.length} / {STORE_CONFIG[store]?.digits || 16} цифр</span>}
-            </label>
-            <button className="primary-btn" type="submit">Сохранить</button>
-            <button className="secondary-btn" type="button"
-              onClick={() => setScreen('catalog-detail')}>Отмена</button>
-          </form>
+            onClick={() => { cancelScan(); setScreen('catalog-detail'); }}>← Назад</button>
+
+          {/* КРОППЕР */}
+          {scanPreview && (
+            <div className="crop-wrap">
+              <div className="crop-hint">Обрежьте область со штрихкодом или QR</div>
+              <div className="crop-img-wrap">
+                <img ref={cropImageRef} src={scanPreview} alt="scan" className="crop-img" />
+              </div>
+              <div className="crop-actions">
+                {scanStatus === 'scanning'
+                  ? <div className="scan-loading">🔍 Распознаю...</div>
+                  : <>
+                      <button type="button" className="primary-btn" onClick={handleCrop}>
+                        Распознать
+                      </button>
+                      <button type="button" className="secondary-btn" onClick={cancelScan}>
+                        Отмена
+                      </button>
+                    </>}
+              </div>
+            </div>
+          )}
+
+          {!scanPreview && (
+            <form className="form" onSubmit={saveCard}>
+              <label>
+                Номер карты
+                <input
+                  type="text" inputMode="numeric"
+                  placeholder={`Введите до ${STORE_CONFIG[store]?.digits || 16} цифр`}
+                  value={number} onChange={handleNumberChange}
+                  maxLength={STORE_CONFIG[store]?.digits || 16} required autoFocus
+                />
+                {numberError
+                  ? <span className="field-error">{numberError}</span>
+                  : <span className="field-hint">{number.length} / {STORE_CONFIG[store]?.digits || 16} цифр</span>}
+              </label>
+
+              {/* КНОПКА СКАНИРОВАНИЯ */}
+              <label className="scan-btn">
+                📷 Сканировать штрихкод или QR
+                <input type="file" accept="image/*" style={{ display: 'none' }}
+                  onChange={handleImageUpload} />
+              </label>
+
+              <button className="primary-btn" type="submit">Сохранить</button>
+              <button className="secondary-btn" type="button"
+                onClick={() => setScreen('catalog-detail')}>Отмена</button>
+            </form>
+          )}
         </main>
       )}
 
