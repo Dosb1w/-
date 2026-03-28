@@ -1,4 +1,30 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Html5Qrcode } from "html5-qrcode";
+/*функция сканирования qr */
+async function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const html5QrCode = new Html5Qrcode("reader-temp");
+
+  try {
+    const result = await html5QrCode.scanFile(file, true);
+
+    // result = строка из QR / штрихкода
+    const clean = result.replace(/\\D/g, '');
+
+    if (clean) {
+      setNumber(clean);
+      setNumberError('');
+    } else {
+      setNumberError('Не удалось распознать номер');
+    }
+  } catch (err) {
+    setNumberError('Ошибка распознавания');
+  }
+}
+
+<div id="reader-temp" style={{ display: 'none' }} />
 
 const STORE_CONFIG = {
   'Пятёрочка':        { color: '#16a34a', qr: true,  category: 'Супермаркеты', digits: 16, appUrl: 'https://5ka.ru/app/', instruction: 'Скачайте приложение → Войдите по номеру телефона → Раздел «Карта» → скопируйте номер под штрихкодом' },
