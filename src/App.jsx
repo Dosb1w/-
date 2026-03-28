@@ -15,6 +15,7 @@ const STORE_CONFIG = {
 
 const STORES = Object.keys(STORE_CONFIG);
 const STORAGE_KEY = 'loyalty-cards-v2';
+const THEME_KEY = 'loyalty-theme';
 const CATEGORIES = ['Супермаркеты', 'Аптеки', 'Другое'];
 
 function maskCardNumber(number) {
@@ -34,19 +35,40 @@ function App() {
   const [store, setStore] = useState(STORES[0]);
   const [number, setNumber] = useState('');
   const [numberError, setNumberError] = useState('');
+  const [toast, setToast] = useState('');
+
+  // Тема
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem(THEME_KEY);
+    return saved !== null ? saved === 'dark' : true;
+  });
+
+  // Редактирование
+  const [editCardId, setEditCardId] = useState(null);
+  const [editNumber, setEditNumber] = useState('');
+  const [editError, setEditError] = useState('');
 
   // Сканирование
   const [scanPreview, setScanPreview] = useState(null);
-  const [scanStatus, setScanStatus] = useState(''); // 'cropping' | 'scanning' | 'error' | ''
+  const [scanStatus, setScanStatus] = useState('');
   const cropperRef = useRef(null);
   const cropImageRef = useRef(null);
 
   const barcodeRef = useRef(null);
   const qrRef = useRef(null);
 
+  // Применение темы
+  useEffect(() => {
+    document.body.classList.toggle('light', !darkMode);
+    localStorage.setItem(THEME_KEY, darkMode ? 'dark' : 'light');
+    if (tg) {
+      tg.setBackgroundColor(darkMode ? '#0a0a0f' : '#f5f5f0');
+      tg.setHeaderColor(darkMode ? '#0a0a0f' : '#f5f5f0');
+    }
+  }, [darkMode, tg]);
+
   // Загрузка карт
   useEffect(() => {
-    // Миграция старых данных
     const oldData = localStorage.getItem('loyalty-cards');
     if (oldData) {
       localStorage.setItem(STORAGE_KEY, oldData);
@@ -66,8 +88,6 @@ function App() {
     if (!tg) return;
     tg.ready();
     tg.expand();
-    tg.setBackgroundColor('#0a0a0f');
-    tg.setHeaderColor('#0a0a0f');
   }, [tg]);
 
   const selectedCard = useMemo(() => cards.find(c => c.id === selectedCardId), [cards, selectedCardId]);
@@ -91,20 +111,21 @@ function App() {
     });
   }, [screen, selectedCard, isQrStore]);
 
-  // Инициализация кроппера после появления изображения
   useEffect(() => {
     if (!scanPreview || !cropImageRef.current || !window.Cropper) return;
     if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null; }
     const img = cropImageRef.current;
     img.onload = () => {
-      cropperRef.current = new window.Cropper(img, {
-        viewMode: 1,
-        aspectRatio: NaN,
-        autoCropArea: 0.8,
-      });
+      cropperRef.current = new window.Cropper(img, { viewMode: 1, aspectRatio: NaN, autoCropArea: 0.8 });
     };
     if (img.complete) img.onload();
   }, [scanPreview]);
+
+  // Тост
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(''), 2500);
+  }
 
   function openBarcode(cardId) { setSelectedCardId(cardId); setScreen('barcode'); }
   function openCatalogDetail(storeName) { setSelectedStoreName(storeName); setScreen('catalog-detail'); }
@@ -114,6 +135,50 @@ function App() {
     setCards(prev => prev.filter(c => c.id !== cardId));
     setScreen('home');
     setTab('home');
+  }
+
+  // Поделиться картой
+  function shareCard(card) {
+    const text = `🃏 Моя карта ${card.store}\nНомер: ${card.number}\n\nДобавь через бота @kartaloyal_bot`;
+    if (tg?.switchInlineQuery) {
+      try {
+        navigator.clipboard.writeText(text).then(() => showToast('Скопировано в буфер обмена'));
+      } catch {
+        showToast(`Номер карты: ${card.number}`);
+      }
+    } else {
+      navigator.clipboard?.writeText(text)
+        .then(() => showToast('Скопировано в буфер обмена'))
+        .catch(() => showToast(`Номер: ${card.number}`));
+    }
+  }
+
+  // Редактирование
+  function openEdit(card) {
+    setEditCardId(card.id);
+    setEditNumber(card.number);
+    setEditError('');
+    setScreen('edit');
+  }
+
+  function handleEditChange(e) {
+    const val = e.target.value.replace(/\D/g, '');
+    const cardStore = cards.find(c => c.id === editCardId)?.store;
+    const cfg = STORE_CONFIG[cardStore];
+    if (val.length > (cfg?.digits || 16)) return;
+    setEditNumber(val);
+    if (val.length >= 8) setEditError('');
+  }
+
+  function saveEdit(e) {
+    e.preventDefault();
+    const cardStore = cards.find(c => c.id === editCardId)?.store;
+    const cfg = STORE_CONFIG[cardStore];
+    if (editNumber.length < 8) { setEditError('Минимум 8 цифр'); return; }
+    if (editNumber.length > (cfg?.digits || 16)) { setEditError(`Максимум ${cfg?.digits || 16} цифр`); return; }
+    setCards(prev => prev.map(c => c.id === editCardId ? { ...c, number: editNumber } : c));
+    showToast('Номер обновлён');
+    setScreen('barcode');
   }
 
   function validateNumber(val, storeName) {
@@ -144,9 +209,9 @@ function App() {
     setStore(STORES[0]);
     setScreen('home');
     setTab('home');
+    showToast('Карта добавлена');
   }
 
-  // Загрузка фото
   function handleImageUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -157,24 +222,18 @@ function App() {
     setNumberError('');
   }
 
-  // Распознавание после обрезки
   async function handleCrop() {
     if (!cropperRef.current) return;
     setScanStatus('scanning');
-
     const canvas = cropperRef.current.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200 });
-
     canvas.toBlob(async (blob) => {
       const file = new File([blob], 'cropped.png', { type: 'image/png' });
-
       if (!window.Html5Qrcode) {
         setScanStatus('error');
         setNumberError('Библиотека сканирования не загружена');
         setScanPreview(null);
         return;
       }
-
-      // Создаём временный div для сканера
       let tempDiv = document.getElementById('reader-temp');
       if (!tempDiv) {
         tempDiv = document.createElement('div');
@@ -182,7 +241,6 @@ function App() {
         tempDiv.style.display = 'none';
         document.body.appendChild(tempDiv);
       }
-
       const scanner = new window.Html5Qrcode('reader-temp');
       try {
         const result = await scanner.scanFile(file, true);
@@ -214,16 +272,27 @@ function App() {
   function goHome() { setScreen('home'); setTab('home'); }
   const alreadyAdded = (storeName) => cards.some(c => c.store === storeName);
 
+  const editCard = cards.find(c => c.id === editCardId);
+
   return (
-    <div className="app">
+    <div className={`app ${darkMode ? 'dark' : 'light'}`}>
+
+      {/* ТОСТ */}
+      {toast && <div className="toast">{toast}</div>}
+
       <header className="header">
         <h1>
           {screen === 'barcode' ? selectedCard?.store
+            : screen === 'edit' ? 'Редактировать'
             : screen === 'catalog-detail' ? selectedStore
             : screen === 'add' ? `Добавить — ${store}`
             : tab === 'home' ? 'Мои карты'
             : 'Каталог'}
         </h1>
+        <button className="theme-btn" type="button" onClick={() => setDarkMode(d => !d)}
+          title="Сменить тему">
+          {darkMode ? '☀️' : '🌙'}
+        </button>
       </header>
 
       {/* HOME */}
@@ -261,8 +330,37 @@ function App() {
           <p className="barcode-number">{selectedCard.number}</p>
           <div className="actions-row">
             <button type="button" className="secondary-btn" onClick={goHome}>Назад</button>
+            <button type="button" className="icon-btn" onClick={() => openEdit(selectedCard)} title="Редактировать">✏️</button>
+            <button type="button" className="icon-btn" onClick={() => shareCard(selectedCard)} title="Поделиться">📤</button>
             <button type="button" className="danger-btn" onClick={() => deleteCard(selectedCard.id)}>Удалить</button>
           </div>
+        </main>
+      )}
+
+      {/* EDIT */}
+      {screen === 'edit' && editCard && (
+        <main className="screen add-screen">
+          <button className="back-link" type="button" onClick={() => setScreen('barcode')}>← Назад</button>
+          <div className="edit-store-badge" style={{ background: STORE_CONFIG[editCard.store]?.color }}>
+            {editCard.store}
+          </div>
+          <form className="form" onSubmit={saveEdit}>
+            <label>
+              Новый номер карты
+              <input
+                type="text" inputMode="numeric"
+                placeholder={`До ${STORE_CONFIG[editCard.store]?.digits || 16} цифр`}
+                value={editNumber} onChange={handleEditChange}
+                maxLength={STORE_CONFIG[editCard.store]?.digits || 16}
+                required autoFocus
+              />
+              {editError
+                ? <span className="field-error">{editError}</span>
+                : <span className="field-hint">{editNumber.length} / {STORE_CONFIG[editCard.store]?.digits || 16} цифр</span>}
+            </label>
+            <button className="primary-btn" type="submit">Сохранить</button>
+            <button className="secondary-btn" type="button" onClick={() => setScreen('barcode')}>Отмена</button>
+          </form>
         </main>
       )}
 
@@ -293,8 +391,7 @@ function App() {
       {/* CATALOG DETAIL */}
       {screen === 'catalog-detail' && selectedStore && (
         <main className="screen detail-screen">
-          <button className="back-link" type="button"
-            onClick={() => setScreen('catalog')}>← Назад</button>
+          <button className="back-link" type="button" onClick={() => setScreen('catalog')}>← Назад</button>
           <div className="detail-badge" style={{ background: STORE_CONFIG[selectedStore].color }}>
             {selectedStore}
           </div>
@@ -329,7 +426,6 @@ function App() {
           <button className="back-link" type="button"
             onClick={() => { cancelScan(); setScreen('catalog-detail'); }}>← Назад</button>
 
-          {/* КРОППЕР */}
           {scanPreview && (
             <div className="crop-wrap">
               <div className="crop-hint">Обрежьте область со штрихкодом или QR</div>
@@ -340,12 +436,8 @@ function App() {
                 {scanStatus === 'scanning'
                   ? <div className="scan-loading">🔍 Распознаю...</div>
                   : <>
-                      <button type="button" className="primary-btn" onClick={handleCrop}>
-                        Распознать
-                      </button>
-                      <button type="button" className="secondary-btn" onClick={cancelScan}>
-                        Отмена
-                      </button>
+                      <button type="button" className="primary-btn" onClick={handleCrop}>Распознать</button>
+                      <button type="button" className="secondary-btn" onClick={cancelScan}>Отмена</button>
                     </>}
               </div>
             </div>
@@ -365,24 +457,19 @@ function App() {
                   ? <span className="field-error">{numberError}</span>
                   : <span className="field-hint">{number.length} / {STORE_CONFIG[store]?.digits || 16} цифр</span>}
               </label>
-
-              {/* КНОПКА СКАНИРОВАНИЯ */}
               <label className="scan-btn">
                 📷 Сканировать штрихкод или QR
-                <input type="file" accept="image/*" style={{ display: 'none' }}
-                  onChange={handleImageUpload} />
+                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
               </label>
-
               <button className="primary-btn" type="submit">Сохранить</button>
-              <button className="secondary-btn" type="button"
-                onClick={() => setScreen('catalog-detail')}>Отмена</button>
+              <button className="secondary-btn" type="button" onClick={() => setScreen('catalog-detail')}>Отмена</button>
             </form>
           )}
         </main>
       )}
 
       {/* BOTTOM NAV */}
-      {screen !== 'barcode' && screen !== 'add' && screen !== 'catalog-detail' && (
+      {screen !== 'barcode' && screen !== 'add' && screen !== 'catalog-detail' && screen !== 'edit' && (
         <nav className="bottom-nav">
           <button type="button" className={`nav-item ${tab === 'home' ? 'active' : ''}`}
             onClick={() => { setTab('home'); setScreen('home'); }}>
