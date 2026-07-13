@@ -1,1 +1,1 @@
-РАБОТАЕТ НО СЫРО
+(https://loyalty-cards-app.vercel.app/)
